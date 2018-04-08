@@ -7,16 +7,10 @@ split [x] = ([x], [])
 split (x:y:l) = (x:odds, y:evens)
   where (odds, evens) = split l
 
-merge :: [a] -> [a] -> [a]
-merge [] [] = []
-merge l [] = l
-merge [] l = l
-merge (a:l1) (b:l2) = a : b : merge l1 l2
-
 solve :: [Int] -> Maybe Int
 solve l =
   let (odds, evens) = split l
-      sorted = merge (sort odds) (sort evens)
+      sorted = concat $ transpose [sort odds, sort evens]
       pairs = zip3 [0..] sorted (tail sorted)
   in do
     (ndx, _, _) <- find (\(_, a, b) -> a > b) pairs
